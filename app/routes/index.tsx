@@ -1,32 +1,23 @@
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import axios from 'axios';
+
 export default function Index() {
-  return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
-  );
+	const data = useLoaderData();
+	return <pre>{JSON.stringify(data, null, 2)}</pre>;
+}
+
+export async function loader() {
+	try {
+		const response = await axios.get(
+			'https://jsonplaceholder.typicode.com/users'
+		);
+
+		const data = await response.data;
+
+		return json(data);
+	} catch (error) {
+		console.error(error);
+		return json({});
+	}
 }
